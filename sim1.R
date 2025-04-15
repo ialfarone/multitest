@@ -89,6 +89,7 @@ for(i in 1:niter){
   significanceCount[i] = sum(ps<0.05)
   print(paste("i:",i))
   print(paste("sign.count:",significanceCount[i]))
+}
   
 # SEM
 
