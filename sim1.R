@@ -23,7 +23,7 @@ aovsim = function(niter = 10, h1 = FALSE, N = 1000) {
     residual = rnorm(N, 0, 1)
     
     if(h1){
-      y = 1 + 0.25*C + residual
+      y = 1 + 0.1*C + residual
     } else {
       y = 1 + residual
     }
@@ -157,5 +157,19 @@ for(i in 1:nrow(res)){
 }
 mean(res[,"B:C"]<0.05)
 
+###################################
 
+# New sim (N = 1000, simpler h1)
+
+nonull = aovsim(niter = 1000, h1 = TRUE)
+
+res = nonull$ms
+mean(res[,"C"]<0.05)
+
+for(i in 1:nrow(res)){
+  res[i,] = p.adjust(res[i,],method="bonferroni")
+}
+
+
+mean(res[,"C"]<0.05)
 
