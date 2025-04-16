@@ -11,17 +11,17 @@ N = 2000
 
 niter = 10
 
-aovsim = function(niter=10, h1 = FALSE, N = 2000) {
+aovsim = function(niter = 10, h1 = FALSE, N = 2000) {
 
 significanceCount = rep(NA,niter)
 ms = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
 
 for(i in 1:niter){
-  A = rbinom(N,1,.5)
-  B = rbinom(N,1,.5)
-  C = rbinom(N,1,.5)
-  D = rnorm(N,0,1)
-  residual = rnorm(N,0,1)
+  A = rbinom(N, 1, .5)
+  B = rbinom(N, 1, .5)
+  C = rbinom(N, 1, .5)
+  D = rnorm(N, 0, 1)
+  residual = rnorm(N, 0, 1)
   
   if(h1){
     y = 1 + 0.25*B*C + residual
@@ -29,17 +29,17 @@ for(i in 1:niter){
     y = 1 + residual
   }
  
-  df = data.frame(A,B,C,D,y)
+  df = data.frame(A, B, C, D, y)
 
 
-  ps = Anova(aov(y~A*B*C*D,data=df))$"Pr(>F)"
+  ps = Anova(aov(y~A*B*C*D, data = df))$"Pr(>F)"
   ps = ps[!is.na(ps)]
   
   significanceCount[i] = sum(ps<0.05)
   ms[i, 1:length(ps)] = ps
 }
 
-colnames(ms)<-rownames(Anova(aov(y~A*B*C*D,data=df)))[-nrow(Anova(aov(y~A*B*C*D,data=df)))]
+colnames(ms) = rownames(Anova(aov(y~A*B*C*D,data = df)))[-nrow(Anova(aov(y~A*B*C*D,data = df)))]
 
 return(list(
   ms = ms,
@@ -50,7 +50,7 @@ return(list(
 
 }
 
-null = aovsim(niter=10, h1=FALSE)
+null = aovsim(niter = 10, h1 = FALSE)
 nonull = aovsim(niter = 10, h1 = TRUE)
 
 # 1 - 0.95^15 (15 è il numero dei test fatti)
@@ -59,7 +59,7 @@ nonull = aovsim(niter = 10, h1 = TRUE)
 
 # SEM
 
-semsim <- function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
+semsim = function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
 
 generate_lavaan_model = function(k, w) {
   model_lines = sapply(1:k, function(f) {
@@ -69,7 +69,6 @@ generate_lavaan_model = function(k, w) {
   })
   paste(model_lines, collapse = "\n")
 }
-
 
 significanceCount = rep(NA, niter)
 ms.sem = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
@@ -95,7 +94,7 @@ for(i in 1:niter){
   
   df = as.data.frame(do.call(cbind, observed_list))
   
-  modelM = generate_lavaan_model(k=6,w=10)
+  modelM = generate_lavaan_model(k = 6,w = 10)
   model = paste(modelM,
                 "\n
               F6 ~ F1 + F2 + F3 + F4 + F5 \n
@@ -108,7 +107,7 @@ for(i in 1:niter){
   pe = summary(fit)$pe
   ps = pe$pvalue[pe$op=="~"]
 
-  significanceCount[i] = sum(ps<0.05)
+  significanceCount[i] = sum(ps < 0.05)
 #  print(paste("i:",i))
 #  print(paste("sign.count:",significanceCount[i]))
   ms.sem[i, 1:length(ps)] = ps
@@ -122,9 +121,9 @@ return(list(
   hist = hist(significanceCount),
   percSigPaths = mean(significanceCount > 0)
 ))
-
 }
 
 null.sem = semsim(niter = 10, h1 = FALSE)
 nonull.sem = semsim(niter = 10, h1 = TRUE)
+
 #####################################
