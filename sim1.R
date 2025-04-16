@@ -1,4 +1,3 @@
-
 #####################################
 
 rm(list=ls())
@@ -11,6 +10,9 @@ N = 2000
 # ANOVA
 
 niter = 10
+
+aovsim = function(niter=10, h1 = FALSE, N = 2000) {
+
 significanceCount = rep(NA,niter)
 ms = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
 
@@ -21,21 +23,36 @@ for(i in 1:niter){
   D = rnorm(N,0,1)
   residual = rnorm(N,0,1)
   
-  y = 1 + residual
-# y = 1 + 0.25*B*C + residual  
+  if(h1){
+    y = 1 + 0.25*B*C + residual
+  } else {
+    y = 1 + residual
+  }
+ 
   df = data.frame(A,B,C,D,y)
-  fit = lm
-  
+
+
   ps = Anova(aov(y~A*B*C*D,data=df))$"Pr(>F)"
   ps = ps[!is.na(ps)]
+  
   significanceCount[i] = sum(ps<0.05)
   ms[i, 1:length(ps)] = ps
 }
 
-head(ms) 
 colnames(ms)<-rownames(Anova(aov(y~A*B*C*D,data=df)))[-nrow(Anova(aov(y~A*B*C*D,data=df)))]
-hist(significanceCount)
-mean(significanceCount>0)
+
+return(list(
+  ms = ms,
+  signCount = significanceCount,
+  hist = hist(significanceCount),
+  percSignCount = mean(significanceCount > 0)
+))
+
+}
+
+null = aovsim(niter=10, h1=FALSE)
+nonull = aovsim(niter = 10, h1 = TRUE)
+
 # 1 - 0.95^15 (15 è il numero dei test fatti)
 
 #####################################
@@ -143,11 +160,7 @@ for(i in 1:niter){
   ms.sem[i, 1:length(ps)] = ps
 } 
 
-
 colnames(ms.sem) = paste(pe$lhs[pe$op == "~"], pe$op[pe$op == "~"], pe$rhs[pe$op == "~"])
 head(ms.sem)
 
 #####################################
-
-
-
