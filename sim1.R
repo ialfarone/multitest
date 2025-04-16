@@ -59,9 +59,8 @@ nonull = aovsim(niter = 10, h1 = TRUE)
 
 # SEM
 
-k = 6
-w = 10
-loading = 0.7
+semsim <- function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
+
 generate_lavaan_model = function(k, w) {
   model_lines = sapply(1:k, function(f) {
     lhs = paste0("F", f, " =~ ")
@@ -71,15 +70,19 @@ generate_lavaan_model = function(k, w) {
   paste(model_lines, collapse = "\n")
 }
 
-niter = 10
-significanceCount = rep(NA,niter)
-ms.sem= as.data.frame(matrix(NA, nrow = niter, ncol = 15))
+
+significanceCount = rep(NA, niter)
+ms.sem = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
 
 for(i in 1:niter){
   residual_sd = sqrt(1 - loading^2)
   latent_vars = matrix(rnorm(N * k), nrow = N, ncol = k)
   colnames(latent_vars) = paste0("F", 1:k)
-#  latent_vars[, "F3"] = 0 + latent_vars[, "F1"] + rnorm(N, 0, 1)
+  
+  if (h1) {
+    latent_vars[, "F3"] = 0 + 0.25*latent_vars[, "F1"] + rnorm(N, 0, 1)
+  }
+  
   observed_list = vector("list", k)
   for (j in 1:k) {
     indicators = matrix(
@@ -89,8 +92,8 @@ for(i in 1:niter){
     colnames(indicators) = paste0("F", j, "_item", 1:w)
     observed_list[[j]] = indicators
   }
-  df = as.data.frame(do.call(cbind, observed_list))
   
+  df = as.data.frame(do.call(cbind, observed_list))
   
   modelM = generate_lavaan_model(k=6,w=10)
   model = paste(modelM,
@@ -100,9 +103,11 @@ for(i in 1:niter){
               F4 ~ F1 + F2 + F3 \n
               F3 ~ F1 + F2 \n
               F2 ~ F1")
+  
   fit = sem(model,df)
   pe = summary(fit)$pe
   ps = pe$pvalue[pe$op=="~"]
+
   significanceCount[i] = sum(ps<0.05)
 #  print(paste("i:",i))
 #  print(paste("sign.count:",significanceCount[i]))
@@ -110,6 +115,16 @@ for(i in 1:niter){
 } 
 
 colnames(ms.sem) = paste(pe$lhs[pe$op == "~"], pe$op[pe$op == "~"], pe$rhs[pe$op == "~"])
-head(ms.sem)
 
+return(list(
+  ms.sem = ms.sem,
+  significanceCount = significanceCount,
+  hist = hist(significanceCount),
+  percSigPaths = mean(significanceCount > 0)
+))
+
+}
+
+null.sem = semsim(niter = 10, h1 = FALSE)
+nonull.sem = semsim(niter = 10, h1 = TRUE)
 #####################################
