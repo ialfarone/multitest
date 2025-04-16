@@ -8,9 +8,7 @@ library(car)
 
 # ANOVA
 
-niter = 10
-
-aovsim = function(niter = 10, h1 = FALSE, N = 1000) {
+aovsim = function(niter = NA, h1 = NA, N = NA) {
   
   significanceCount = rep(NA,niter)
   ms = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
@@ -23,14 +21,14 @@ aovsim = function(niter = 10, h1 = FALSE, N = 1000) {
     residual = rnorm(N, 0, 1)
     
     if(h1){
-      y = 1 + 0.1*C + residual
+      y = 1 + 0.20*C + residual
     } else {
       y = 1 + residual
     }
     
     df = data.frame(A, B, C, D, y)
     
-    ps = Anova(aov(y~A*B*C*D, data = df))$"Pr(>F)"
+    ps = Anova(aov(y~A*B*C*D, data = df), type="II")$"Pr(>F)"
     ps = ps[!is.na(ps)]
     
     significanceCount[i] = sum(ps<0.05)
@@ -47,14 +45,13 @@ aovsim = function(niter = 10, h1 = FALSE, N = 1000) {
   ))
 }
 
-
 StartAnova0 = Sys.time()
-null = aovsim(niter = 5000, h1 = FALSE)
+nonull = aovsim(niter = 5000, h1 = FALSE, N = 1000)
 EndAnova0 = Sys.time()
 (diffAnova0 = difftime(EndAnova0,StartAnova0,units="mins"))
 
 StartAnova1 = Sys.time()
-nonull = aovsim(niter = 5000, h1 = TRUE)
+nonull = aovsim(niter = 5000, h1 = TRUE, N = 1000)
 EndAnova1 = Sys.time()
 (diffAnova1 = difftime(EndAnova1,StartAnova1,units="mins"))
 
@@ -66,7 +63,7 @@ save.image("multitestResults.RData")
 
 # SEM
 
-semsim = function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
+semsim = function(niter = NA, h1 = NA, N = NA, k = 6, w = 10, loading = 0.5) {
   
   generate_lavaan_model = function(k, w) {
     model_lines = sapply(1:k, function(f) {
@@ -86,7 +83,7 @@ semsim = function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
     colnames(latent_vars) = paste0("F", 1:k)
     
     if (h1) {
-      latent_vars[, "F3"] = 0 + 0.25*latent_vars[, "F1"] + rnorm(N, 0, 1)
+      latent_vars[, "F3"] = 0 + 0.15*latent_vars[, "F1"] + rnorm(N, 0, 1)
     }
     
     observed_list = vector("list", k)
@@ -131,14 +128,14 @@ semsim = function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
 }
 
 StartSem0 = Sys.time()
-null.sem = semsim(niter = 5000, h1 = FALSE)
+null.sem = semsim(niter = 5000, h1 = FALSE, N = 1000)
 EndSem0 = Sys.time()
 (diffSem0 = difftime(EndSem0,StartSem0,units="mins"))
 
 save.image("multitestResults.RData")
 
 StartSem1 = Sys.time()
-nonull.sem = semsim(niter = 5000, h1 = TRUE)
+nonull.sem = semsim(niter = 5000, h1 = TRUE, N = 1000)
 EndSem1 = Sys.time()
 (diffSem1 = difftime(EndSem1,StartSem1,units="mins"))
 
@@ -148,28 +145,20 @@ save.image("multitestResults.RData")
 
 #####################################
 
+# see results
+
 load("multitestResults.RData")
 
 res = nonull$ms
-mean(res[,"B:C"]<0.05)
+mean(res[,"C"]<0.05)
 for(i in 1:nrow(res)){
   res[i,] = p.adjust(res[i,],method="fdr")
-}
-mean(res[,"B:C"]<0.05)
+}; mean(res[,"C"]<0.05)
+
+res = nonull.sem$ms.sem
+mean(res[,"F3 ~ F1"]<0.05)
+for(i in 1:nrow(res)){
+  res[i,] = p.adjust(res[i,],method="fdr")
+}; mean(res[,"F3 ~ F1"]<0.05)
 
 ###################################
-
-# New sim (N = 1000, simpler h1)
-
-nonull = aovsim(niter = 1000, h1 = TRUE)
-
-res = nonull$ms
-mean(res[,"C"]<0.05)
-
-for(i in 1:nrow(res)){
-  res[i,] = p.adjust(res[i,],method="bonferroni")
-}
-
-
-mean(res[,"C"]<0.05)
-
