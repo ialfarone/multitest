@@ -50,16 +50,18 @@ aovsim = function(niter = 10, h1 = FALSE, N = 2000) {
 
 
 StartAnova0 = Sys.time()
-null = aovsim(niter = 1e4, h1 = FALSE)
+null = aovsim(niter = 5000, h1 = FALSE)
 EndAnova0 = Sys.time()
 (diffAnova0 = difftime(EndAnova0,StartAnova0,units="mins"))
 
 StartAnova1 = Sys.time()
-nonull = aovsim(niter = 1e4, h1 = TRUE)
+nonull = aovsim(niter = 5000, h1 = TRUE)
 EndAnova1 = Sys.time()
 (diffAnova1 = difftime(EndAnova1,StartAnova1,units="mins"))
 
 # 1 - 0.95^15 (15 è il numero dei test fatti)
+
+save.image("multitestResults.RData")
 
 #####################################
 
@@ -130,12 +132,14 @@ semsim = function(niter = 10, N = 2000, k = 6, w = 10, loading = 0.7, h1 = F) {
 }
 
 StartSem0 = Sys.time()
-null.sem = semsim(niter = 1e4, h1 = FALSE)
+null.sem = semsim(niter = 5000, h1 = FALSE)
 EndSem0 = Sys.time()
 (diffSem0 = difftime(EndSem0,StartSem0,units="mins"))
 
+save.image("multitestResults.RData")
+
 StartSem1 = Sys.time()
-nonull.sem = semsim(niter = 1e4, h1 = TRUE)
+nonull.sem = semsim(niter = 5000, h1 = TRUE)
 EndSem1 = Sys.time()
 (diffSem1 = difftime(EndSem1,StartSem1,units="mins"))
 
