@@ -3,7 +3,6 @@
 rm(list=ls())
 library(lavaan)
 library(car)
-N = 2000
 
 #####################################
 
@@ -11,7 +10,7 @@ N = 2000
 
 niter = 10
 
-aovsim = function(niter = 10, h1 = FALSE, N = 2000) {
+aovsim = function(niter = 10, h1 = FALSE, N = 1000) {
   
   significanceCount = rep(NA,niter)
   ms = as.data.frame(matrix(NA, nrow = niter, ncol = 15))
@@ -24,7 +23,7 @@ aovsim = function(niter = 10, h1 = FALSE, N = 2000) {
     residual = rnorm(N, 0, 1)
     
     if(h1){
-      y = 1 + 0.25*B*C + residual
+      y = 1 + 0.25*C + residual
     } else {
       y = 1 + residual
     }
@@ -148,4 +147,15 @@ EndSem1 = Sys.time()
 save.image("multitestResults.RData")
 
 #####################################
+
+load("multitestResults.RData")
+
+res = nonull$ms
+mean(res[,"B:C"]<0.05)
+for(i in 1:nrow(res)){
+  res[i,] = p.adjust(res[i,],method="fdr")
+}
+mean(res[,"B:C"]<0.05)
+
+
 
