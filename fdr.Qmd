@@ -1,0 +1,88 @@
+
+# Correction Method FDR / BH - Examples
+
+```{r, echo=F, warning=F}
+library(ggplot2)
+method = "fdr"
+gg = function(ps){
+  p_before = ps[order(ps)]
+  p_after = p.adjust(p_before,method=method)
+  dfp = data.frame(p = c(p_before, p_after), 
+                 test = letters[1:length(ps)],
+                 time = rep(c("before","after"),each=length(ps))
+  )
+  ggplot(dfp, aes(x=test, y=p, group=test, color=time, size=time))+
+    #ggtitle(paste("Correction method:",method))+
+    scale_size_manual(values=c(4,5))+
+    coord_cartesian(ylim=c(0,1))+
+    scale_y_continuous(breaks=seq(0,1,.1))+
+    geom_point()+
+    geom_hline(linewidth=1,yintercept=c(0,1))+
+    geom_line(size=0.5,color="black")+
+    theme(text=element_text(size=24),
+          legend.title=element_blank())+
+    ylab("p-value")
+}
+```
+
+I p-value vengono ordinati dal più piccolo al più grande. Ciascun p-value viene corretto moltiplicandolo per il numero totale di test diviso per il suo numero di ordine sequenziale per grandezza. Tuttavia, ciascun p-value viene corretto al massimo fino a raggiungere il valore del p-value aggiustato immediatamente successivo. 
+
+#### Example 1
+
+- il più piccolo è p = 0.05; viene corretto 0.05 * (4/1) = 0.20
+- il successivo è p = 0.15; viene corretto 0.15 * (4/2) = 0.30
+- il successivo è p = 0.40; viene corretto 0.40 * (4/3) = 0.53
+- l'ultimo è p = 0.90; non viene corretto 0.90 * (4/4) = 0.90
+
+```{r, echo=F, warning=F}
+ps = c(.05,.15,.40,.90)
+gg(ps)
+```
+
+#### Example 2
+
+Ma ecco la complicazione: ciascun p-value viene corretto al massimo fino a raggiungere il p-value aggiustato immediatamente successivo:
+
+- il secondo p-value è 0.35; dovrebbe essere corretto 0.35 * (4/2) = 0.70...
+- tuttavia, dato che il terzo è 0.40 e viene corretto 0.40 * (4/3) = 0.53, sia il secondo che il terzo 
+vengono corretti a 0.53
+```{r, echo=F, warning=F}
+ps = c(.05,.35,.40,.90)
+gg(ps)
+```
+
+#### Example 3
+
+Qui si vede più chiaramente l'imposizione del "limite superiore"
+
+```{r, echo=F, warning=F}
+ps = c(.40,.45,.50,.55)
+gg(ps)
+```
+
+#### Example 4
+
+Che d'altra parte, se tutto è più o meno significativo, vuol dire che lo rimarrà
+
+```{r, echo=F, warning=F}
+ps = c(.015,.025,.03,.04)
+method = "fdr"
+  p_before = ps[order(ps)]
+  p_after = p.adjust(p_before,method=method)
+  dfp = data.frame(p = c(p_before, p_after), 
+                 test = letters[1:length(ps)],
+                 time = rep(c("before","after"),each=length(ps))
+  )
+  ggplot(dfp, aes(x=test, y=p, group=test, color=time, size=time))+
+    #ggtitle(paste("Correction method:",method))+
+    scale_size_manual(values=c(4,5))+
+    coord_cartesian(ylim=c(0.005,1))+
+    scale_y_continuous(breaks=c(0.005,0.01,0.03,0.05,0.10,0.200,0.50,1),transf="log")+
+    geom_point()+
+    geom_hline(linewidth=1,yintercept=c(0,1))+
+    geom_line(size=0.5,color="black")+
+    theme(text=element_text(size=24),
+          legend.title=element_blank())+
+    ylab("p-value")+
+    geom_hline(yintercept=0.05,color="red",linetype=2, size=1)
+```
