@@ -162,3 +162,6 @@ for(i in 1:nrow(res)){
 }; mean(res[,"F3 ~ F1"]<0.05)
 
 ###################################
+
+nonull$percSignCount
+nonull.sem$percSigPaths

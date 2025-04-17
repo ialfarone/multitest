@@ -1,0 +1,80 @@
+---
+title: "Multiple testing in ANOVA and SEM"
+author: "Enrico Toffalini, Irene Alfarone"
+date: 'today'
+format:
+  beamer:
+    theme: default
+    title-slide-attributes:
+      attr: center
+    header-includes: |
+      \usepackage{graphicx}
+      \titlegraphic{\includegraphics[width=0.2\linewidth]{logo.png}}
+editor: visual
+---
+
+## Overview
+
+We present two simulated scenarios to illustrate the issue of multiple testing, by looking at false positive rates and power in:
+
+-   ANOVA
+
+-   Structural Equation Modeling (SEM)
+
+## ANOVA
+
+We simulated 5000 ANOVA with 3 binary predictors (A, B, C) and one continuous predictor (D), under H0 and H1 (y = 1 + 0.20\*C + residual).
+
+We present here the results of the simulation under H1.
+
+## ANOVA
+
+```{r, echo = FALSE}
+
+library(car)
+
+N = 1e+05
+A = rbinom(N, 1, .5)
+B = rbinom(N, 1, .5)
+C = rbinom(N, 1, .5)
+D = rnorm(N, 0, 1)
+residual = rnorm(N, 0, 1)
+
+y = 1 + 0.20*C + residual
+
+df = data.frame(A, B, C, D, y)
+
+Anova(aov(y~A*B*C*D, data = df), type="II")
+```
+
+## Results of the simulation
+
+| Metric                          | Value |
+|---------------------------------|-------|
+| Power                           | 88.8% |
+| Power (after correction; FDR)   | 60.6% |
+| At least one significant effect | 94.2% |
+
+: Under H1 (true effect of C)
+
+## SEM
+
+![Latent Factors](sem.PNG)
+
+## SEM
+
+![Measurement model](measmod.png)
+
+## SEM
+
+![Celestial SEM (from Celestial Mediation)](celestialsem.jpg)
+
+## Results
+
+| Metric                          | Value |
+|---------------------------------|-------|
+| Power                           | 94.6% |
+| Power (after correction; FDR)   | 72.8% |
+| At least one significant effect | 97.4% |
+
+: Under H1 (true path F3 ~ F1)
