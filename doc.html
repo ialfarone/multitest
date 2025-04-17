@@ -186,23 +186,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Anova Table (Type II tests)
 
 Response: y
-          Sum Sq    Df  F value    Pr(&gt;F)    
-A              0     1   0.4423  0.506037    
-B              0     1   0.4568  0.499145    
-C            978     1 977.8921 &lt; 2.2e-16 ***
-D              0     1   0.0049  0.944230    
-A:B            0     1   0.1045  0.746553    
-A:C            0     1   0.1696  0.680499    
-B:C            0     1   0.0001  0.990892    
-A:D            0     1   0.1203  0.728661    
-B:D            0     1   0.0010  0.975377    
-C:D            8     1   8.3019  0.003961 ** 
-A:B:C          0     1   0.1376  0.710657    
-A:B:D          0     1   0.4020  0.526049    
-A:C:D          1     1   0.5207  0.470532    
-B:C:D          1     1   1.2083  0.271670    
-A:B:C:D        0     1   0.1869  0.665519    
-Residuals 100000 99984                       
+          Sum Sq    Df  F value  Pr(&gt;F)    
+A              0     1   0.2741 0.60062    
+B              0     1   0.0416 0.83844    
+C            894     1 895.2829 &lt; 2e-16 ***
+D              1     1   0.6767 0.41071    
+A:B            0     1   0.2500 0.61705    
+A:C            0     1   0.2458 0.62002    
+B:C            4     1   3.9570 0.04668 *  
+A:D            1     1   1.0717 0.30056    
+B:D            0     1   0.0026 0.95941    
+C:D            4     1   4.1753 0.04102 *  
+A:B:C          0     1   0.3472 0.55569    
+A:B:D          0     1   0.1200 0.72898    
+A:C:D          0     1   0.0066 0.93546    
+B:C:D          1     1   1.0166 0.31332    
+A:B:C:D        0     1   0.4150 0.51943    
+Residuals  99880 99984                     
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -227,7 +227,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <td>60.6%</td>
 </tr>
 <tr class="odd">
-<td>At least one significant effect</td>
+<td>At least one false positive</td>
 <td>94.2%</td>
 </tr>
 </tbody>
@@ -351,7 +351,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <td>72.8%</td>
 </tr>
 <tr class="odd">
-<td>At least one significant effect</td>
+<td>At least one false positive</td>
 <td>97.4%</td>
 </tr>
 </tbody>
@@ -899,7 +899,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------------------------------|-------|</span></span>
 <span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Power                           <span class="pp">|</span> 88.8% <span class="pp">|</span></span>
 <span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Power (after correction; FDR)   <span class="pp">|</span> 60.6% <span class="pp">|</span></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> At least one significant effect <span class="pp">|</span> 94.2% <span class="pp">|</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> At least one false positive     <span class="pp">|</span> 94.2% <span class="pp">|</span></span>
 <span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>: Under H1 (true effect of C)</span>
 <span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a></span>
@@ -990,7 +990,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a><span class="pp">|---------------------------------|-------|</span></span>
 <span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Power                           <span class="pp">|</span> 94.6% <span class="pp">|</span></span>
 <span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Power (after correction; FDR)   <span class="pp">|</span> 72.8% <span class="pp">|</span></span>
-<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> At least one significant effect <span class="pp">|</span> 97.4% <span class="pp">|</span></span>
+<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> At least one false positive     <span class="pp">|</span> 97.4% <span class="pp">|</span></span>
 <span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a>: Under H1 (true path F3 \~ F1)</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>

@@ -85,7 +85,7 @@ Anova(aov(y~A*B*C*D, data = df), type="II")
 |---------------------------------|-------|
 | Power                           | 88.8% |
 | Power (after correction; FDR)   | 60.6% |
-| At least one significant effect | 94.2% |
+| At least one false positive     | 94.2% |
 
 : Under H1 (true effect of C)
 
@@ -176,6 +176,6 @@ semsim = function(niter = NA, h1 = NA, N = NA, k = 6, w = 10, loading = 0.5) {
 |---------------------------------|-------|
 | Power                           | 94.6% |
 | Power (after correction; FDR)   | 72.8% |
-| At least one significant effect | 97.4% |
+| At least one false positive     | 97.4% |
 
 : Under H1 (true path F3 \~ F1)
