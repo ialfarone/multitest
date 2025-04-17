@@ -61,7 +61,6 @@ aovsim = function(niter = NA, h1 = NA, N = NA) {
 
 ```
 
-
 ```{r, message=FALSE}
 library(car)
 
@@ -79,19 +78,27 @@ df = data.frame(A, B, C, D, y)
 Anova(aov(y~A*B*C*D, data = df), type="II")
 ```
 
+```{r echo=F, eval=F, include=F}
+mean(rowSums(nonull$ms[,colnames(nonull$ms)[!colnames(nonull$ms)%in%c("C")]]<0.05)>0)
+correct = nonull$ms
+for(i in 1:nrow(correct)) correct[i,] = p.adjust(correct[i,],method="fdr")
+mean(rowSums(correct[,colnames(correct)[!colnames(correct)%in%c("C")]]<0.05)>0)
+```
+
 ### Results of the simulation
 
-| Metric                          | Value |
-|---------------------------------|-------|
-| Power                           | 88.8% |
-| Power (after correction; FDR)   | 60.6% |
-| At least one false positive     | 94.2% |
+| Metric                                             | Value |
+|----------------------------------------------------|-------|
+| Power (before correction)                                | 88.8% |
+| Power (after correction; FDR)                      | 60.6% |
+| At least one false positive (before correction)          | 49.7% |
+| At least one false positive (after correction;FDR) | 6.8%  |
 
 : Under H1 (true effect of C)
 
 ## SEM
-The simulated SEM model consists of six latent variables, each measured by ten indicators, 
-with a true effect F3 ~ F1 under H1.
+
+The simulated SEM model consists of six latent variables, each measured by ten indicators, with a true effect F3 \~ F1 under H1.
 
 ```{r, message = FALSE}
 library(lavaan)
@@ -162,6 +169,13 @@ semsim = function(niter = NA, h1 = NA, N = NA, k = 6, w = 10, loading = 0.5) {
 
 ![Latent Factors](sem.PNG)
 
+```{r echo=F, eval=F, include=F}
+mean(rowSums(nonull.sem$ms.sem[,colnames(nonull.sem$ms.sem)[!colnames(nonull.sem$ms.sem)%in%c("F3 ~ F1")]]<0.05)>0)
+correct = nonull.sem$ms.sem
+for(i in 1:nrow(correct)) correct[i,] = p.adjust(correct[i,],method="fdr")
+mean(rowSums(correct[,colnames(correct)[!colnames(correct)%in%c("F3 ~ F1")]]<0.05)>0)
+```
+
 ## SEM
 
 ![Measurement model](measmod.png)
@@ -172,10 +186,11 @@ semsim = function(niter = NA, h1 = NA, N = NA, k = 6, w = 10, loading = 0.5) {
 
 ## Results
 
-| Metric                          | Value |
-|---------------------------------|-------|
-| Power                           | 94.6% |
-| Power (after correction; FDR)   | 72.8% |
-| At least one false positive     | 97.4% |
+| Metric                                              | Value |
+|-----------------------------------------------------|-------|
+| Power (before correction)                                 | 94.6% |
+| Power (after correction; FDR)                       | 72.8% |
+| At least one false positive (before correction)           | 49.6% |
+| At least one false positive (after correction; FDR) | 6.1%  |
 
 : Under H1 (true path F3 \~ F1)
