@@ -1,0 +1,39 @@
+```{r}
+# il problema
+fu<-function (ntest,alpha=.05) 1-(1-alpha)^ntest
+fu(1)
+fu(10)
+fu(100)
+#########################
+#### NOTE SUL CONTROLLO ERRORE DI PRIMO TIPO:
+# FWER = "Non voglio fare nemmeno un errore!" (molto conservativo)
+#       = la probabilità di fare almeno un errore di primo tipo tra tutti i test fatti.
+#
+# FDR = "Va bene sbagliare un po', purché la percentuale di errori sia bassa." (più permissivo)
+#      =  la proporzione attesa di falsi positivi tra tutti i risultati significativi.
+##########################
+
+# ESEMPIO 10 test
+p_values <- c(0.001, 0.004, 0.012, 0.018, 0.026, 0.034, 0.041, 0.052, 0.065, 0.08)
+names(p_values) <- paste0("Test", 1:10)
+
+# Correzioni
+bonferroni <- p.adjust(p_values, method = "bonferroni")
+fdr <- p.adjust(p_values, method = "BH")
+
+# Soglia di significatività
+alpha <- 0.05
+
+# Risultati
+result <- data.frame(
+  Test = names(p_values),
+  P_Value = p_values,
+  Bonferroni = bonferroni,
+  FDR_BH = round(fdr,4),
+  Sig_Uncorrected = p_values < alpha,
+  Sig_Bonferroni = bonferroni < alpha,
+  Sig_FDR = fdr < alpha
+)
+
+print(result)
+```
