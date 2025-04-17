@@ -92,7 +92,7 @@ mean(rowSums(correct[,colnames(correct)[!colnames(correct)%in%c("C")]]<0.05)>0)
 | Power (before correction)                                | 88.8% |
 | Power (after correction; FDR)                      | 60.6% |
 | At least one false positive (before correction)          | 49.7% |
-| At least one false positive (after correction;FDR) | 6.8%  |
+| At least one false positive (after correction; FDR) | 6.8%  |
 
 : Under H1 (true effect of C)
 
@@ -176,15 +176,11 @@ for(i in 1:nrow(correct)) correct[i,] = p.adjust(correct[i,],method="fdr")
 mean(rowSums(correct[,colnames(correct)[!colnames(correct)%in%c("F3 ~ F1")]]<0.05)>0)
 ```
 
-## SEM
-
 ![Measurement model](measmod.png)
-
-## SEM
 
 ![Celestial SEM (from Celestial Mediation)](celestialsem.jpg)
 
-## Results
+### Results of the simulation
 
 | Metric                                              | Value |
 |-----------------------------------------------------|-------|
