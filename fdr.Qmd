@@ -62,7 +62,7 @@ gg(ps)
 
 #### Example 4
 
-Che d'altra parte, se tutto è più o meno significativo, vuol dire che lo rimarrà
+Che d'altra parte, se tutto è più o meno significativo, vuol dire che lo rimarrà (con Bonferroni, invece, non si "salverebbe" niente)
 
 ```{r, echo=F, warning=F}
 ps = c(.015,.025,.03,.04)
